@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+<div class="row justify-content-md-center">
+    <div class="col-md-6">
+        {% if errors is defined and errors|length > 0 %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in errors %}
+            {{error}} <br/>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <h3 class="panel-title">Sign up
+        </h3>
+        <p>
+            <small>Already have a Registered ? <a href="/login">Sign in</a></small>
+        </p>
+        <form role="form" method="post">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group {{ 'has-danger' if error_username }}">
+                        <input value="{{username}}" class="form-control input-sm" name="username"
+                               type="text" placeholder="Username">
+                        <div class="form-control-feedback">{{error_username}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group {{ 'has-danger' if error_email }}">
+                <input value="{{email}}" type="email" name="email" class="form-control input-sm"
+                       placeholder="Email Address">
+                <div class="form-control-feedback">{{error_email}}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group {{ 'has-danger' if error_password }}">
+                        <input type="password" name="password" class="form-control input-sm"
+                               placeholder="Password">
+                        <div class="form-control-feedback">{{error_password}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group {{ 'has-danger' if error_verify }}">
+                        <input type="password" name="verify"
+                               class="form-control input-sm" placeholder="Confirm Password">
+                        <div class="form-control-feedback">{{error_verify}}</div>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Register" class="btn btn-info btn-block">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

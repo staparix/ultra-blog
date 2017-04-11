@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<section class="row">
+    <div class="col-12">
+        <h3>Edit comment</h3>
+    </div>
+</section>
+<section class="edit-comment row">
+    <div class="col-12">
+        <form role="form" method="POST">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group {{ 'has-danger' if error_username }}">
+                        <textarea class="form-control" name="comment" placeholder="Your comment hear...">{{comment.comment}}</textarea>
+                        <div class="form-control-feedback">{{error_comment}}</div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <input class="btn btn-info btn-block" type="submit" value="Save">
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-link" href="/blog/{{post_id}}">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

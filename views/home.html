@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+    {% for post in posts %}
+    <div class="col-md-12">
+        <div class="card post">
+            <div class="card-block">
+                <h3 class="card-title"><a href="/blog/{{post.key().id()}}">{{post.title}}</a></h3>
+                <p class="card-text">{{post.body}}</p>
+                <span class="badge badge-primary">{{post.created.strftime("%b %d %Y")}}</span>
+                <span class="badge badge-primary">{{post.author.username}}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

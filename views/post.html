@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<section class="post row">
+    <div class="col-10">
+        <h2>{{post.title}}</h2>
+    </div>
+    <div class="col-2 post-controls">
+        {% if user and user.key().id() == post.author.key().id() %}
+        <a class="btn btn-outline-primary" href="/edit/{{post.key().id()}}">edit</a>
+        <form method="post" action="/post/delete">
+            <input class="btn btn-outline-danger" type="submit" value="delete">
+            <input type="text" hidden name="postId" value="{{post.key().id()}}">
+        </form>
+        {% endif %}
+    </div>
+</section>
+<div class="row">
+    <div class="col-12">
+        <div class="post-details">
+            <span class="post-details_author">{{post.author.username}}</span>
+            <span class="post-details_created">{{post.created.strftime("%b %d %Y")}}</span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <p>{{post.body}}</p>
+    </div>
+</div>
+{% if not user or user.key().id() != post.author.key().id() %}
+<section class="post-likes row">
+    <div class="col">
+        <form action="/like" method="post">
+            <input class="btn btn-link" type="submit" value="like {{ likes if likes != 0 }}">
+            <input name="postId" hidden type="text" value="{{post.key().id()}}">
+        </form>
+    </div>
+</section>
+{% endif %}
+{% if user and user.key().id() == post.author.key().id() %}
+<section class="row">
+    <div class="post-likes col-12">
+         <em>{{likes}} liked</em>
+    </div>
+</section>
+{% endif %}
+
+<hr>
+<div class="row">
+    <div class="col-12">
+        <h5>Comments</h5>
+    </div>
+</div>
+
+<div class="comments row">
+    <div class="col-12">
+        {% for c in comments %}
+        <div class="comment row">
+            <div class="col-10">
+                <div class="comment_details">
+                    <div class="comment_author">{{c.comment_author.username}}</div>
+                    <div class="comment_created">{{c.created.strftime("%b %d %Y")}}</div>
+                </div>
+                <div class="comment_body">
+                    {{c.comment}}
+                </div>
+            </div>
+            <div class="col-2 comment_controls">
+                {% if user and user.key().id() == c.comment_author.key().id() %}
+                <a href="/post/{{post.key().id()}}/edit/comment/{{c.key().id()}}">edit</a>
+                <form method="post" action="/comment/delete">
+                    <input class="btn btn-link" type="submit" value="delete">
+                    <input type="text" hidden name="commentId" value="{{c.key().id()}}">
+                    <input type="text" hidden name="postId" value="{{post.key().id()}}">
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="row add-comment">
+    <form action="/comment" role="form" method="POST">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group {{ 'has-danger' if error_username }}">
+                    <textarea class="form-control add-comment__input" name="comment"
+                              placeholder="Your comment hear..."></textarea>
+                    <div class="form-control-feedback">{{error_comment}}</div>
+                </div>
+                <input class="btn btn-info btn-block" type="submit" value="comment">
+                <input name="postId" hidden type="text" value="{{post.key().id()}}">
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

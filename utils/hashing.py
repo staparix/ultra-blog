@@ -1,8 +1,5 @@
 import hmac
-import os
-import re
-
-secret = 'fallen'
+from config import secret
 
 
 def make_secure_val(val):

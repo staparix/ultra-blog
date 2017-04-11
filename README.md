@@ -1,5 +1,7 @@
 **Ultra blog**
 
+Ultra Blog is live on [https://blog-ab.appspot.com/blog](http://)
+
 How to start project!?
 1. Python 2.7 required
 2. Download the SDK for App Engine [https://cloud.google.com/appengine/docs/standard/python/download](http://)

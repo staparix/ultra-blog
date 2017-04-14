@@ -18,5 +18,10 @@ class Post(db.Model):
         return Post(parent=post_key(), title=title, body=body, author=author)
 
     @classmethod
+    def find_by_id(cls, post_id):
+        key = db.Key.from_path('Post', post_id, parent=post_key())
+        return db.get(key)
+
+    @classmethod
     def by_id(cls, pid):
         return Post.get_by_id(pid, parent=post_key())

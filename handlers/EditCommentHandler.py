@@ -1,27 +1,29 @@
 from handlers.common.CommonHandler import CommonHandler
 from model.Post import Post
 from model.Comment import Comment
+from utils.validationDecorators import comment_exists, user_owns_comment, user_logged_in
 
 
 class EditCommentHandler(CommonHandler):
+    @comment_exists
+    @user_owns_comment
+    def edit_comment(self, post_id, *args, **kwargs):
+        comment = kwargs.get('comment')
+        self.render('edit-comment.html', comment=comment, post_id=post_id)
+
+    @comment_exists
+    @user_owns_comment
+    def save_comment(self, *args, **kwargs):
+        comment = self.request.get('comment')
+        old_comment = kwargs.get('comment')
+        old_comment.comment = comment
+        old_comment.put()
+
+    @user_logged_in
     def get(self, post_id, comment_id):
-        if self.is_logged():
-            post = Post.by_id(int(post_id))
-            comment = Comment.by_id(int(comment_id))
-            if comment.comment_author.key().id() != self.user.key().id():
-                self.redirect('/blog')
+        self.edit_comment(self, post_id=post_id, comment_id=comment_id)
 
-            self.render('edit-comment.html', comment=comment, post_id=post.key().id())
-
+    @user_logged_in
     def post(self, post_id, comment_id):
-        if self.is_logged():
-            comment = self.request.get('comment')
-            old_comment = Comment.by_id(int(comment_id))
-
-            if old_comment.comment_author.key().id() != self.user.key().id():
-                self.redirect('/blog')
-
-            old_comment.comment = comment
-            old_comment.put()
-
-            self.redirect('/blog/' + post_id)
+        self.save_comment(self, comment_id=comment_id)
+        self.redirect('/blog/' + post_id)

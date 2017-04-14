@@ -14,6 +14,11 @@ class Comment(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
 
     @classmethod
+    def find_by_id(cls, comment_id):
+        key = db.Key.from_path('Comment', comment_id, parent=comment_key())
+        return db.get(key)
+
+    @classmethod
     def save(cls, author, post, comment):
         return Comment(parent=comment_key(),
                        comment_author=author,

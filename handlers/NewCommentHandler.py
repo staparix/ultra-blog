@@ -1,18 +1,19 @@
 from handlers.common.CommonHandler import CommonHandler
-from model.Post import Post
 from model.Comment import Comment
+from utils.validationDecorators import post_exists, user_logged_in
 
 
 class NewCommentHandler(CommonHandler):
-    def post(self):
-        if self.is_logged():
-            comment = self.request.get('comment').strip()
-            post_id = self.request.get('postId')
-            post = Post.by_id(int(post_id))
+    @post_exists
+    def new_comment(self, *args, **kwargs):
+        comment = self.request.get('comment').strip()
+        if comment:
+            post = kwargs.get('post')
+            new_comment = Comment.save(author=self.user, post=post, comment=comment)
+            new_comment.put()
 
-            if comment:
-                new_comment = Comment.save(author=self.user, post=post, comment=comment)
-                new_comment.put()
-                self.redirect('/blog/' + post_id)
-            else:
-                self.redirect('/blog/' + post_id)
+    @user_logged_in
+    def post(self):
+        post_id = self.request.get('postId')
+        self.new_comment(self, post_id=post_id)
+        self.redirect('/blog/' + post_id)
